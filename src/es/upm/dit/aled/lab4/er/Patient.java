@@ -131,15 +131,28 @@ public class Patient extends Thread {
 	 */
 	private void advanceProtocol() {
 		// TODO
+		//Pedir a la interfaz gráfica EmergencyRoomGUI que ejecute una animación que lleve elpunto que representa al paciente hasta su nueva ubicación.
+		EmergencyRoomGUI.getInstance().animateTransfer(this, this.getProtocol().get(indexProtocol));
+		//Cambiar la ubicación actual del paciente.
+		this.setLocation(this.getProtocol().get(indexProtocol).getTo());
+		//Avanzar el protocolo hasta el siguiente paso.
+		this.indexProtocol++;
 	}
 
 	/**
 	 * Simulates the treatment of the Patient at its current location. Therefore,
 	 * the Patient must spend at this method the amount of time specified in such
 	 * Area.
+	 * @throws InterruptedException 
 	 */
 	private void attendedAtLocation() {
 		// TODO
+		try {
+			sleep(this.location.getTime());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -150,6 +163,17 @@ public class Patient extends Thread {
 	@Override
 	public void run() {
 		// TODO
+		// Ser atendido en la ubicación actual.
+		while(this.indexProtocol < this.protocol.size()) {
+			this.attendedAtLocation();
+			// Avanzar al siguiente paso en su protocolo
+			this.advanceProtocol();
+		} 
+		//lo elimina cuando ha terminado
+		if(this.indexProtocol == this.protocol.size()) {
+			this.attendedAtLocation();
+			EmergencyRoomGUI.getInstance().removePatient(this);
+		}
 	}
 
 }
