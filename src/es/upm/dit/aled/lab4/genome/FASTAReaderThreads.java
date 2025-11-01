@@ -116,7 +116,17 @@ public class FASTAReaderThreads {
 	 */
 	public List<Integer> search(byte[] pattern) {
 		// TODO
-		return null;
+		List<Integer> results = new ArrayList<>();
+		int cores = Runtime.getRuntime().availableProcessors();
+		ExecutorService executor = Executors.newFixedThreadPool(cores);
+		
+		//numero de segmentos
+		int sizeSegments = this.validBytes/cores;
+		
+		
+		executor.shutdown();
+
+		return results;
 	}
 
 	public static void main(String[] args) {
